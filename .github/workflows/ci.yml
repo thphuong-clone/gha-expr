@@ -25,11 +25,11 @@ jobs:
     needs: build
     environment: Staging
     steps:
-      - run: echo "Deployed to ${THE_SECRET}"
+      - run: echo "Deployed to ${{ secrets.THE_SECRET }}"
   production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build
     environment: Production
     steps:
-      - run: echo "Deployed to ${THE_SECRET}"
+      - run: echo "Deployed to ${{ secrets.THE_SECRET }}"

@@ -13,6 +13,7 @@ inputs:
     required: false
   push:
     description: Push the image to the registry
+    type: boolean
     required: false
     default: false
 
@@ -22,5 +23,5 @@ runs:
   - name: Run Earthly build
     run: |
       build_args="$(echo ${{ inputs.build-args }} | xargs -I{} echo --{} | tr '\n' ' ')"
-      push=${{ inputs.push ? "--push" : ""}}
+      push=${{ inputs.push && "--push" || ""}}
       earthly ${{ inputs.path }}:+${{ inputs.target }} $build_arg $push

@@ -1,0 +1,26 @@
+name: Earthly
+
+inputs:
+  path:
+    description: The directory containing Earthfile
+    required: false
+    default: .
+  target:
+    description: The target to run
+    required: true
+  build-args:
+    description: Additional build arguments
+    required: false
+  push:
+    description: Push the image to the registry
+    required: false
+    default: false
+
+runs:
+  using: composite
+  steps:
+  - name: Run Earthly build
+    run: |
+      build_args="$(echo ${{ inputs.build-args }} | xargs -I{} echo --{} | tr '\n' ' ')"
+      push=${{ inputs.push ? "--push" : ""}}
+      earthly ${{ inputs.path }}:+${{ inputs.target }} $build_arg $push

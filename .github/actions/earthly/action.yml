@@ -22,5 +22,5 @@ runs:
   - name: Run Earthly build
     shell: bash
     run: |
-      build_args="$(echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/') | tr '\n' ' ')"
+      build_args="$(echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' | tr '\n' ' ')"
       earthly ${{ inputs.push == 'true' && '--push ' || ''}}${{ inputs.path }}+${{ inputs.target }} $build_args

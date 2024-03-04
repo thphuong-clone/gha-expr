@@ -27,8 +27,12 @@ jobs:
         with:
           version: 0.8.4
       - uses: actions/checkout@v2
-      - name: Build
-        run: earthly +build
+      - name: Earthly build
+        uses: ./github/actions/earthly
+        with:
+          target: build
+          build-args: |
+            MY_ARG=foo
   deploy:
     name: Deploy
     runs-on: ubuntu-latest

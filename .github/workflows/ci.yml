@@ -32,7 +32,8 @@ jobs:
         with:
           target: build
           build-args: |-
-            --MY_ARG=foo --OTHER_ARG=bar
+            MY_ARG=foo
+            OTHER_ARG=bar
           push: true
 
   deploy:

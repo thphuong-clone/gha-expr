@@ -21,6 +21,7 @@ runs:
   using: composite
   steps:
   - name: Run Earthly build
+    shell: bash
     run: |
       build_args="$(echo ${{ inputs.build-args }} | xargs -I{} echo --{} | tr '\n' ' ')"
       push=${{ inputs.push && '--push' || ''}}

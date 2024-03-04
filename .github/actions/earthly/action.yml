@@ -23,4 +23,4 @@ runs:
     shell: bash
     run: |
       build_args="$(echo "${{ inputs.build-args }}" | xargs -I{} echo --{} | tr '\n' ' ')"
-      earthly ${{ inputs.push == 'true' && '--push' || ''}} $push ${{ inputs.path }}+${{ inputs.target }} $build_arg
+      earthly ${{ inputs.push == 'true' && '--push ' || ''}}${{ inputs.path }}+${{ inputs.target }} $build_arg

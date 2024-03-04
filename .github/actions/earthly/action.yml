@@ -25,4 +25,4 @@ runs:
     run: |
       build_args="$(echo "${{ inputs.build-args }}" | xargs -I{} echo --{} | tr '\n' ' ')"
       push=${{ inputs.push && '--push' || ''}}
-      earthly ${{ inputs.path }}:+${{ inputs.target }} $build_arg $push
+      earthly $push ${{ inputs.path }}:+${{ inputs.target }} $build_arg

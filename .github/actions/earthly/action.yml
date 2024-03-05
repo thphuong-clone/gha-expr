@@ -10,15 +10,31 @@ inputs:
   build-args:
     description: Additional build arguments
     required: false
+  platforms:
+    description: The platform to build for
+    required: false
   push:
     description: Push the image to the registry
     type: boolean
     required: false
     default: false
+  earthly-version:
+    description: The version of Earthly to use
+    required: false
+    default: ^0.8.0
 
 runs:
   using: composite
   steps:
+  - uses: earthly/actions-setup@v1
+    with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      version: ${{ inputs.earthly-version }}
+  - name: Set up QEMU
+    uses: docker/setup-qemu-action@v3
+    if: ${{ inputs.platforms != '' }}
+    with:
+      platforms: ${{ inputs.platforms }}
   - name: Run Earthly build
     shell: bash
     run: |

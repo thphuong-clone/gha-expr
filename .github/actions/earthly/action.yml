@@ -13,6 +13,11 @@ inputs:
   platforms:
     description: The platform to build for
     required: false
+  ci:
+    description: Enable CI mode
+    type: boolean
+    required: false
+    default: true
   push:
     description: Push the image to the registry
     type: boolean
@@ -78,6 +83,7 @@ runs:
     shell: bash
     run: |-
       # Set up Earthly arguments
+      echo "${{ inputs.ci == 'true' && '--ci' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.push == 'true' && '--push' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.no-cache == 'true' && '--no-cache' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.use-inline-cache == 'true' && '--use-inline-cache' || ''}}" >> /tmp/earthly-args

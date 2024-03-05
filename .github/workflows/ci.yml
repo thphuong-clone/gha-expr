@@ -41,6 +41,14 @@ jobs:
         with:
           target: image
           build-args: |-
-            MY_ARG=foo
-            OTHER_ARG=bar
+            MY_ARG=${{ inputs.environment == 'production' && '-prod' || '' }}
+            TAG=gha-${{ github.run_number }}
           push: true
+          no-cache: true
+          use-inline-cache: true
+          save-inline-cache: true
+          remote-cache: alpine:3.19
+          max-remote-cache: true
+          cache-from: |
+            alpine:3.19
+            debian:bookworm

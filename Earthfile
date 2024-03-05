@@ -11,4 +11,6 @@ image:
     COPY +build/hello.txt /
 
     ARG MY_ARG
-    SAVE IMAGE my-alpine-${MY_ARG:-mmm}:3.19
+    ARG TAG
+
+    SAVE IMAGE my-alpine${MY_ARG}:${TAG:-latest}

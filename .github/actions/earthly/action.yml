@@ -44,8 +44,15 @@ runs:
     if: ${{ inputs.platforms != '' }}
     with:
       platforms: ${{ inputs.platforms }}
+  - name: Prepare Earthly arguments
+    id: earthly-args
+    shell: bash
+    run: |-
+      echo "args=" >> "$GITHUB_OUTPUT"
+      echo ${{ inputs.push == 'true' && ' --push ' || ''}} >> "$GITHUB_OUTPUT"
+      echo " ${{ inputs.path }}+${{ inputs.target }} " >> "$GITHUB_OUTPUT"
+      echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' | tr '\n' ' ' >> "$GITHUB_OUTPUT"
   - name: Run Earthly build
     shell: bash
     run: |
-      build_args="$(echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' | tr '\n' ' ')"
-      earthly ${{ inputs.push == 'true' && '--push ' || ''}}${{ inputs.path }}+${{ inputs.target }} $build_args
+      earthly ${{ steps.earthly-args.outputs.args }}

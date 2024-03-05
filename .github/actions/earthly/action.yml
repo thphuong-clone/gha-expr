@@ -52,6 +52,7 @@ runs:
       echo ${{ inputs.push == 'true' && ' --push ' || ''}} >> "$GITHUB_OUTPUT"
       echo " ${{ inputs.path }}+${{ inputs.target }} " >> "$GITHUB_OUTPUT"
       echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' | tr '\n' ' ' >> "$GITHUB_OUTPUT"
+      cat "$GITHUB_OUTPUT"
   - name: Run Earthly build
     shell: bash
     run: |

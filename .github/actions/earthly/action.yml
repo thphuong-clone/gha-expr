@@ -18,12 +18,41 @@ inputs:
     type: boolean
     required: false
     default: false
+  no-cache:
+    description: Do not use cache while building
+    type: boolean
+    required: false
+    default: false
+  use-inline-cache:
+    description: Attempt to use any inline cache that may have been previously pushed uses image tags referenced by SAVE IMAGE --push or SAVE IMAGE --cache-from
+    type: boolean
+    required: false
+    default: false
+  save-inline-cache:
+    description: Enable cache inlining when pushing images
+    type: boolean
+    required: false
+    default: false
+  cache-from:
+    description: Use the cache from the specified image
+    required: false
+  remote-cache:
+    description: Use the remote cache
+    required: false
+  max-remote-cache:
+    description: Saves all intermediate images too in the remote cache
+    type: boolean
+    required: false
+    default: false
+  extra-args:
+    description: Additional arguments to pass to Earthly
+    required: false
   earthly-version:
     description: The version of Earthly to use
     required: false
     default: ^0.8.0
   github-token:
-    description: The GitHub token
+    description: The GitHub token used to fetch Earthly version
     required: false
 
 runs:
@@ -48,10 +77,18 @@ runs:
     id: earthly-args
     shell: bash
     run: |-
-      echo -n "args=" >> "$GITHUB_OUTPUT"
-      echo -n ${{ inputs.push == 'true' && ' --push ' || ''}} >> "$GITHUB_OUTPUT"
-      echo -n " ${{ inputs.path }}+${{ inputs.target }} " >> "$GITHUB_OUTPUT"
-      echo -n "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' | tr '\n' ' ' >> "$GITHUB_OUTPUT"
+      # Set up Earthly arguments
+      echo "${{ inputs.push == 'true' && ' --push ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.no-cache == 'true' && ' --no-cache ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.use-inline-cache == 'true' && ' --use-inline-cache ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.save-inline-cache == 'true' && ' --save-inline-cache ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.remote-cache != 'true' && format(' --remote-cache {0}', inputs.remote-cache) || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.max-remote-cache == 'true' && ' --max-remote-cache ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.cache-from }}" | tr '\n, ' '\n' | xargs -I{} echo '--cache-from {}' >> /tmp/earthly-args
+      echo "${{ inputs.path }}+${{ inputs.target }}" >> /tmp/earthly-args
+      echo "${{ inputs.extra-args }}" >> /tmp/earthly-args
+      echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' >> /tmp/earthly-args
+      echo "args=$(cat /tmp/earthly-args | sed -i '/^$/d' filename | tr '\n' ' ')" >> /tmp/earthly-args
   - name: Run Earthly build
     shell: bash
     run: |

@@ -82,12 +82,12 @@ runs:
       echo "${{ inputs.no-cache == 'true' && ' --no-cache ' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.use-inline-cache == 'true' && ' --use-inline-cache ' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.save-inline-cache == 'true' && ' --save-inline-cache ' || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.remote-cache != 'true' && format(' --remote-cache {0}', inputs.remote-cache) || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.remote-cache != '' && format(' --remote-cache {0}', inputs.remote-cache) || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.max-remote-cache == 'true' && ' --max-remote-cache ' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.cache-from }}" | tr '\n, ' '\n' | xargs -I{} echo '--cache-from {}' >> /tmp/earthly-args
       echo "${{ inputs.path }}+${{ inputs.target }}" >> /tmp/earthly-args
       echo "${{ inputs.extra-args }}" >> /tmp/earthly-args
-      echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' >> /tmp/earthly-args
+      echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)([^$])/--\2/' >> /tmp/earthly-args
       echo "args=$(cat /tmp/earthly-args | sed '/^$/d' | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
   - name: Run Earthly build
     shell: bash

@@ -35,6 +35,7 @@ runs:
       github-token: ${{ inputs.github-token }}
       version: ${{ inputs.earthly-version }}
   - name: Configure Earthly
+    shell: bash
     run: |
       earthly config global.disable_analytics true
       earthly config global.disable_log_sharing true

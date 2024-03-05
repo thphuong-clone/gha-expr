@@ -88,7 +88,7 @@ runs:
       echo "${{ inputs.path }}+${{ inputs.target }}" >> /tmp/earthly-args
       echo "${{ inputs.extra-args }}" >> /tmp/earthly-args
       echo "${{ inputs.build-args }}" | tr '[:space:]' '\n' | sed -E 's/(^|^--)/--/' >> /tmp/earthly-args
-      echo "args=$(cat /tmp/earthly-args | sed -i '/^$/d' filename | tr '\n' ' ')" >> /tmp/earthly-args
+      echo "args=$(cat /tmp/earthly-args | sed -i '/^$/d' filename | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
   - name: Run Earthly build
     shell: bash
     run: |

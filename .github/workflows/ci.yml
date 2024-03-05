@@ -31,10 +31,6 @@ jobs:
         uses: ./.github/actions/earthly
         with:
           target: build
-          build-args: |-
-            MY_ARG=foo
-            OTHER_ARG=bar
-          push: true
 
   deploy:
     name: Deploy
@@ -42,4 +38,15 @@ jobs:
     needs: build
     environment: ${{ inputs.environment || 'staging' }}
     steps:
-      - run: echo "Deployed to ${{ secrets.THE_SECRET }}"
+      - uses: earthly/actions-setup@v1
+        with:
+          version: 0.8.4
+      - uses: actions/checkout@v2
+      - name: Earthly build
+        uses: ./.github/actions/earthly
+        with:
+          target: image
+          build-args: |-
+            MY_ARG=foo
+            OTHER_ARG=bar
+          push: true

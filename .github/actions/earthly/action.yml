@@ -78,12 +78,12 @@ runs:
     shell: bash
     run: |-
       # Set up Earthly arguments
-      echo "${{ inputs.push == 'true' && ' --push ' || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.no-cache == 'true' && ' --no-cache ' || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.use-inline-cache == 'true' && ' --use-inline-cache ' || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.save-inline-cache == 'true' && ' --save-inline-cache ' || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.remote-cache != '' && format(' --remote-cache {0}', inputs.remote-cache) || ''}}" >> /tmp/earthly-args
-      echo "${{ inputs.max-remote-cache == 'true' && ' --max-remote-cache ' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.push == 'true' && '--push' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.no-cache == 'true' && '--no-cache' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.use-inline-cache == 'true' && '--use-inline-cache' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.save-inline-cache == 'true' && '--save-inline-cache' || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.remote-cache != '' && format('--remote-cache {0}', inputs.remote-cache) || ''}}" >> /tmp/earthly-args
+      echo "${{ inputs.max-remote-cache == 'true' && '--max-remote-cache' || ''}}" >> /tmp/earthly-args
       echo "${{ inputs.cache-from }}" | tr '\n, ' '\n' | xargs -I{} echo '--cache-from {}' >> /tmp/earthly-args
       echo "${{ inputs.path }}+${{ inputs.target }}" >> /tmp/earthly-args
       echo "${{ inputs.extra-args }}" >> /tmp/earthly-args

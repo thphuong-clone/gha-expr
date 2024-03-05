@@ -5,8 +5,10 @@ FROM alpine:3.19
 build:
     RUN echo "Hello, world!" > /hello.txt
 
+    SAVE ARTIFACT /hello.txt
+
 image:
-    COPY +build/hello.txt /hello.txt
+    COPY +build/hello.txt /
 
     ARG MY_ARG
     SAVE IMAGE my-alpine-${MY_ARG:-mmm}:3.19

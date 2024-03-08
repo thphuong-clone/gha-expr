@@ -22,6 +22,11 @@ runs:
       echo os=$os >> "$GITHUB_OUTPUT"
       echo arch=$arch >> "$GITHUB_OUTPUT"
 
+  - uses: actions/cache/restore@v3
+    with:
+      path: /usr/local/bin/earthly
+      key: earthly-${{ runner.os }}-${{ runner.arch }}-${{ inputs.version }
+
   - name: Install Earthly
     shell: bash
     run: |
@@ -30,16 +35,23 @@ runs:
         exit 0
       fi
 
-      curl -sSfL "https://github.com/earthly/earthly/releases/download/v${{ inputs.version }}/earthly-${{ steps.system.outputs.os }}-$${{ steps.system.outputs.arch }}" -o /usr/local/bin/earthly
+      curl -sSfL "https://github.com/earthly/earthly/releases/download/v${{ inputs.version }}/earthly-${{ steps.system.outputs.os }}-${{ steps.system.outputs.arch }}" -o /usr/local/bin/earthly
       chmod +x /usr/local/bin/earthly
 
       earthly --version
+
   - name: Configure Earthly
     shell: bash
     run: |
       earthly config global.disable_analytics true
       earthly config global.disable_log_sharing true
+
   - name: Bootstrap Earthly
     shell: bash
     run: |
       earthly bootstrap
+
+  - uses: actions/cache/save@v3
+    with:
+      path: /usr/local/bin/earthly
+      key: earthly-${{ runner.os }}-${{ runner.arch }}-${{ inputs.version }

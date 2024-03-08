@@ -19,7 +19,7 @@ runs:
 
       os=$(uname -s | tr '[:upper:]' '[:lower:]')
       arch=$(uname -m)
-      curl -sSfL "https://github.com/earthly/earthly/releases/${{ inputs.version }}/download/earthly-$os-$arch -o /usr/local/bin/earthly"
+      curl -sSfL "https://github.com/earthly/earthly/releases/${{ inputs.version }}/download/earthly-$os-$arch" -o /usr/local/bin/earthly
       chmod +x /usr/local/bin/earthly
 
       earthly --version

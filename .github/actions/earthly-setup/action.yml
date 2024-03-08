@@ -23,7 +23,7 @@ runs:
         x86_64) arch=amd64 ;;
         aarch64) arch=arm64 ;;
       esac
-      curl -sSfL "https://github.com/earthly/earthly/releases/v${{ inputs.version }}/download/earthly-$os-$arch" -o /usr/local/bin/earthly
+      curl -sSfL "https://github.com/earthly/earthly/releases/download/v${{ inputs.version }}/earthly-$os-$arch" -o /usr/local/bin/earthly
       chmod +x /usr/local/bin/earthly
 
       earthly --version

@@ -12,8 +12,7 @@ runs:
   - name: Install Earthly
     shell: bash
     run: |
-      set -e
-      if [ earthly --version | grep -q "earthly version ${{ inputs.version }}" ]; then
+      if [ earthly --version | grep -q "earthly version v${{ inputs.version }}" ]; then
         echo "Earthly version ${version} is already installed"
         exit 0
       fi

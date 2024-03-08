@@ -64,15 +64,7 @@ runs:
   using: composite
   steps:
   - name: Set up Earthly
-    uses: earthly/actions-setup@v1
-    with:
-      github-token: ${{ inputs.github-token }}
-      version: ${{ inputs.earthly-version }}
-  - name: Configure Earthly
-    shell: bash
-    run: |
-      earthly config global.disable_analytics true
-      earthly config global.disable_log_sharing true
+    uses: .github/actions/earthly-setup
   - name: Set up QEMU
     uses: docker/setup-qemu-action@v3
     if: ${{ inputs.platforms != '' }}

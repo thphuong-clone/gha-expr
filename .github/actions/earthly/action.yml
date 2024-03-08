@@ -64,7 +64,7 @@ runs:
   using: composite
   steps:
   - name: Set up Earthly
-    uses: .github/actions/earthly-setup
+    uses: ./.github/actions/earthly-setup
   - name: Set up QEMU
     uses: docker/setup-qemu-action@v3
     if: ${{ inputs.platforms != '' }}

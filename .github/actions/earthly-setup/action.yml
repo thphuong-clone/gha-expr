@@ -1,0 +1,35 @@
+name: Earthly Setup
+
+inputs:
+  version:
+    description: The version of Earthly to use
+    required: false
+    default: 0.8.4
+
+runs:
+  using: composite
+  steps:
+  - name: Install Earthly
+    shell: bash
+    run: |
+      set -e
+      if [ earthly --version | grep -q "earthly version ${version}" ]; then
+        echo "Earthly version ${version} is already installed"
+        exit 0
+      fi
+
+      os=$(uname -s | tr '[:upper:]' '[:lower:]')
+      arch=$(uname -m)
+      curl -sSfL "https://github.com/earthly/earthly/releases/${version}/download/earthly-${os}-${arch} -o /usr/local/bin/earthly"
+      chmod +x /usr/local/bin/earthly
+
+      earthly --version
+  - name: Configure Earthly
+    shell: bash
+    run: |
+      earthly config global.disable_analytics true
+      earthly config global.disable_log_sharing true
+  - name: Bootstrap Earthly
+    shell: bash
+    run: |
+      earthly bootstrap

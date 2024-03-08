@@ -9,6 +9,19 @@ inputs:
 runs:
   using: composite
   steps:
+  - id: system
+    shell: bash
+    run: |
+      os=$(uname -s | tr '[:upper:]' '[:lower:]')
+      arch=$(uname -m)
+      case $arch in
+        x86_64) arch=amd64 ;;
+        aarch64) arch=arm64 ;;
+      esac
+
+      echo os=$os >> "$GITHUB_OUTPUT"
+      echo arch=$arch >> "$GITHUB_OUTPUT"
+
   - name: Install Earthly
     shell: bash
     run: |
@@ -17,13 +30,7 @@ runs:
         exit 0
       fi
 
-      os=$(uname -s | tr '[:upper:]' '[:lower:]')
-      arch=$(uname -m)
-      case $arch in
-        x86_64) arch=amd64 ;;
-        aarch64) arch=arm64 ;;
-      esac
-      curl -sSfL "https://github.com/earthly/earthly/releases/download/v${{ inputs.version }}/earthly-$os-$arch" -o /usr/local/bin/earthly
+      curl -sSfL "https://github.com/earthly/earthly/releases/download/v${{ inputs.version }}/earthly-${{ steps.system.outputs.os }}-$${{ steps.system.outputs.arch }}" -o /usr/local/bin/earthly
       chmod +x /usr/local/bin/earthly
 
       earthly --version
